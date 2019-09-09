@@ -1,0 +1,24 @@
+{
+  "name": "derived-key-storage",
+  "version": "0.0.0",
+  "description": "Derive a key and secret key file from a name",
+  "main": "index.js",
+  "dependencies": {
+    "random-access-storage": "^1.4.0",
+    "thunky": "^1.0.3",
+    "varint": "^5.0.0"
+  },
+  "devDependencies": {
+    "random-access-memory": "^3.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/derived-key-storage.git"
+  },
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/derived-key-storage/issues"
+  },
+  "homepage": "https://github.com/mafintosh/derived-key-storage"
+}
