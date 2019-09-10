@@ -12,7 +12,7 @@ npm install derived-key-storage
 const derivedStorage = require('derived-key-storage')
 const raf = require('random-access-file')
 
-const { key, secret } = derivedStorage(raf('name'), function (name, cb) {
+const { key, secretKey } = derivedStorage(name => raf(name), (name, cb) => {
   // derive your keypair here ...
   // if name is null, this keypair is fresh, otherwise derive from that name
   cb(null, {
@@ -22,17 +22,17 @@ const { key, secret } = derivedStorage(raf('name'), function (name, cb) {
   })
 })
 
-key.read(0, 32, function (err, buf) {
+key.read(0, 32, (err, buf) => {
   console.log('public key is', err, buf)
 })
 ```
 
 ## API
 
-#### `{ key, secret } = derivedStorage(storage, deriver)`
+#### `{ key, secretKey } = derivedStorage(storage, deriver)`
 
 Create a new key pair instance. Returns two random-access-storage instances, one for the public key and one for the secret key.
-The storage instance you pass in will be used to store the name of the keypair. The deriver function should look like this:
+The storage function you pass in will be used to store the name of the keypair. The deriver function should look like this:
 
 ```
 function (name, cb) {
