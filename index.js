@@ -77,9 +77,7 @@ function keyPair (storage, derive) {
       })
     },
     close (req) {
-      storage.close(err => {
-        req.callback(err)
-      })
+      keyStorage.close(err => req.callback(err))
     }
   })
 
@@ -99,9 +97,7 @@ function keyPair (storage, derive) {
       })
     },
     close (req) {
-      storage.close(err => {
-        req.callback(err)
-      })
+      nameStorage.close(err => req.callback(err))
     }
   })
 
