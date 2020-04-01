@@ -7,14 +7,18 @@ module.exports = keyPair
 function keyPair (storage, derive) {
   const keyStorage = storage('key')
   const nameStorage = storage('name')
+  const secretKeyStorage = storage('secret_key')
 
   const load = thunky(function (cb) {
     keyStorage.read(0, 32, (err, key) => {
       if (err) return createNew()
       readName((err, name) => {
         if (err) return cb(err)
-        if (!name) return cb(null, { publicKey: key, secretKey: null, name: null })
-        derive(name, cb)
+        if (name) return derive(name, cb)
+        secretKeyStorage.read(0, 64, (err, secretKey) => {
+          if (err) return cb(null, { publicKey: key, secretKey: null, name: null })
+          return cb(null, { publicKey: key, secretKey, name: null })
+        })
       })
     })
 
@@ -52,12 +56,21 @@ function keyPair (storage, derive) {
     function createNew () {
       derive(null, (err, res) => {
         if (err) return cb(err)
-        writeName(res.name, err => {
+        keyStorage.write(0, res.publicKey, err => {
           if (err) return cb(err)
-          keyStorage.write(0, res.publicKey, err => {
-            if (err) return cb(err)
-            return cb(null, res)
-          })
+          if (res.name) {
+            writeName(res.name, err => {
+              if (err) return cb(err)
+              return cb(null, res)
+            })
+          } else if (res.secretKey) {
+            secretKeyStorage.write(0, res.secretKey, err => {
+              if (err) return cb(err)
+              return cb(null, res)
+            })
+          } else {
+            return cb(new Error('The derivation function did not provide a name or a secret key.'))
+          }
         })
       })
     }
