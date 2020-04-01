@@ -1,6 +1,6 @@
 {
   "name": "derived-key-storage",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Derive a key and secret key file from a name",
   "main": "index.js",
   "dependencies": {
