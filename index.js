@@ -58,20 +58,15 @@ function keyPair (storage, derive) {
         if (err) return cb(err)
         keyStorage.write(0, res.publicKey, err => {
           if (err) return cb(err)
-          if (res.name) {
-            writeName(res.name, err => {
-              if (err) return cb(err)
-              return cb(null, res)
-            })
-          } else if (res.secretKey) {
-            secretKeyStorage.write(0, res.secretKey, err => {
-              if (err) return cb(err)
-              return cb(null, res)
-            })
-          } else {
-            return cb(new Error('The derivation function did not provide a name or a secret key.'))
-          }
+          if (res.name) return writeName(res.name, done)
+          else if (res.secretKey) return secretKeyStorage.write(0, res.secretKey, done)
+          else return done(new Error('The derivation function did not provide a name or a secret key.'))
         })
+
+        function done (err) {
+          if (err) return cb(err)
+          return cb(null, res)
+        }
       })
     }
   })
